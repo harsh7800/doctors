@@ -16,7 +16,7 @@ import {
 import { X, Plus, Search, Pill } from "lucide-react";
 import { searchMedicines, Medicine, MEDICINE_DATABASE } from "@/lib/medicines";
 
-interface PrescriptionChip {
+export interface PrescriptionChip {
   id: string;
   medicine: Medicine;
   dosage: string;
@@ -38,11 +38,11 @@ export default function PrescriptionChips({
   const [searchResults, setSearchResults] = useState<Medicine[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [isAddMedicineOpen, setIsAddMedicineOpen] = useState(false);
-  const [newMedicine, setNewMedicine] = useState({
+  const [newMedicine, setNewMedicine] = useState<Omit<Medicine, "id">>({
     name: "",
     genericName: "",
     dosage: "",
-    form: "tablet" as const,
+    form: "tablet",
     category: "",
   });
   const searchRef = useRef<HTMLDivElement>(null);
@@ -236,7 +236,7 @@ export default function PrescriptionChips({
                   onChange={(e) =>
                     setNewMedicine({
                       ...newMedicine,
-                      form: e.target.value as any,
+                      form: e.target.value as Medicine["form"],
                     })
                   }
                   className="w-full p-2 border rounded-md"

@@ -9,7 +9,6 @@ import {
   UserPlus,
   Search,
   Settings,
-  LogOut,
   Home,
   UserCheck,
 } from "lucide-react";
@@ -30,7 +29,7 @@ import {
 export function DoctorSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const data = {
     user: {

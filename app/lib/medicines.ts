@@ -3,7 +3,14 @@ export interface Medicine {
   name: string;
   genericName: string;
   dosage: string;
-  form: "tablet" | "capsule" | "syrup" | "injection" | "cream" | "drops";
+  form:
+    | "tablet"
+    | "capsule"
+    | "syrup"
+    | "injection"
+    | "cream"
+    | "drops"
+    | "inhaler";
   category: string;
 }
 

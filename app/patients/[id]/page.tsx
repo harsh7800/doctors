@@ -14,15 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -143,13 +134,14 @@ export default function PatientOverviewPage() {
         doctorId: appointmentForm.doctorId,
         date: appointmentForm.date,
         time: appointmentForm.time,
+        duration: parseInt(appointmentForm.duration),
         symptoms: appointmentForm.symptoms,
         diagnosis: appointmentForm.diagnosis,
-        prescription: appointmentForm.prescription,
+        prescriptions: [],
         notes: appointmentForm.notes,
         status: appointmentForm.status,
+        type: "consultation",
         createdAt: new Date(),
-        updatedAt: new Date(),
       };
       LocalStorage.addConsultation(newConsultation);
     }
@@ -233,21 +225,6 @@ export default function PatientOverviewPage() {
   const formatDateTime = (dateString: string, timeString: string) => {
     const date = new Date(`${dateString}T${timeString}`);
     return date.toLocaleString();
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "scheduled":
-        return "bg-yellow-100 text-yellow-800";
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      case "rescheduled":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
   };
 
   return (
@@ -639,23 +616,14 @@ export default function PatientOverviewPage() {
                 ) : (
                   <div className="space-y-6">
                     {/* Combined Timeline */}
-                    {[...appointments, ...consultations]
+                    {[...consultations]
                       .sort((a, b) => {
-                        const dateA =
-                          "date" in a
-                            ? new Date(`${a.date}T${a.time}`)
-                            : new Date(a.createdAt);
-                        const dateB =
-                          "date" in b
-                            ? new Date(`${b.date}T${b.time}`)
-                            : new Date(b.createdAt);
+                        const dateA = new Date(`${a.date}T${a.time}`);
+                        const dateB = new Date(`${b.date}T${b.time}`);
                         return dateB.getTime() - dateA.getTime();
                       })
                       .map((item, index) => {
                         const isAppointment = "date" in item;
-                        const itemDate = isAppointment
-                          ? new Date(`${item.date}T${item.time}`)
-                          : new Date(item.createdAt);
 
                         return (
                           <div key={item.id} className="relative">
@@ -705,82 +673,59 @@ export default function PatientOverviewPage() {
                                       </Badge>
                                     </div>
                                     <div className="text-sm text-gray-500">
-                                      {isAppointment
-                                        ? formatDateTime(item.date, item.time)
-                                        : formatDate(item.createdAt.toString())}
+                                      {formatDateTime(item.date, item.time)}
                                     </div>
                                   </div>
 
-                                  {isAppointment ? (
-                                    <div className="space-y-2">
+                                  <div className="space-y-3">
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-600">
+                                        Symptoms
+                                      </p>
+                                      <p className="text-sm text-gray-900">
+                                        {item.symptoms}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium text-gray-600">
+                                        Diagnosis
+                                      </p>
+                                      <p className="text-sm text-gray-900">
+                                        {item.diagnosis}
+                                      </p>
+                                    </div>
+                                    {item.prescriptions.length > 0 && (
                                       <div>
                                         <p className="text-sm font-medium text-gray-600">
-                                          Reason
+                                          Prescription
                                         </p>
-                                        <p className="text-sm text-gray-900">
-                                          {item.reason}
-                                        </p>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        <Badge
-                                          className={getStatusColor(
-                                            item.status
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {item.prescriptions.map(
+                                            (medicine, medIndex) => (
+                                              <Badge
+                                                key={medIndex}
+                                                variant="outline"
+                                                className="text-xs"
+                                              >
+                                                {medicine.medicine?.name ||
+                                                  "Unknown Medicine"}
+                                              </Badge>
+                                            )
                                           )}
-                                        >
-                                          {item.status}
-                                        </Badge>
+                                        </div>
                                       </div>
-                                    </div>
-                                  ) : (
-                                    <div className="space-y-3">
+                                    )}
+                                    {item.notes && (
                                       <div>
                                         <p className="text-sm font-medium text-gray-600">
-                                          Symptoms
+                                          Notes
                                         </p>
                                         <p className="text-sm text-gray-900">
-                                          {item.symptoms}
+                                          {item.notes}
                                         </p>
                                       </div>
-                                      <div>
-                                        <p className="text-sm font-medium text-gray-600">
-                                          Diagnosis
-                                        </p>
-                                        <p className="text-sm text-gray-900">
-                                          {item.diagnosis}
-                                        </p>
-                                      </div>
-                                      {item.prescription.length > 0 && (
-                                        <div>
-                                          <p className="text-sm font-medium text-gray-600">
-                                            Prescription
-                                          </p>
-                                          <div className="flex flex-wrap gap-1 mt-1">
-                                            {item.prescription.map(
-                                              (medicine, medIndex) => (
-                                                <Badge
-                                                  key={medIndex}
-                                                  variant="outline"
-                                                  className="text-xs"
-                                                >
-                                                  {medicine}
-                                                </Badge>
-                                              )
-                                            )}
-                                          </div>
-                                        </div>
-                                      )}
-                                      {item.notes && (
-                                        <div>
-                                          <p className="text-sm font-medium text-gray-600">
-                                            Notes
-                                          </p>
-                                          <p className="text-sm text-gray-900">
-                                            {item.notes}
-                                          </p>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>

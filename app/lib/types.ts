@@ -1,3 +1,5 @@
+import { PrescriptionChip } from "@/components/PrescriptionChips";
+
 export interface User {
   id: string;
   name: string;
@@ -50,6 +52,7 @@ export interface Appointment {
   doctorId: string;
   date: string;
   time: string;
+  duration: number;
   reason: string;
   status: "scheduled" | "completed" | "cancelled" | "rescheduled";
   createdAt: Date;
@@ -58,13 +61,18 @@ export interface Appointment {
 
 export interface Consultation {
   id: string;
-  appointmentId: string;
+  appointmentId?: string;
   patientId: string;
   doctorId: string;
+  date: string;
+  time: string;
+  duration: number;
+  status: "scheduled" | "completed" | "cancelled";
   symptoms: string;
   diagnosis: string;
-  prescription: string[];
+  prescriptions: PrescriptionChip[];
   notes: string;
+  type: "consultation";
   createdAt: Date;
 }
 
@@ -75,6 +83,12 @@ export interface Task {
   description: string;
   dueDate: string;
   completed: boolean;
+  status: "pending" | "in-progress" | "completed";
+  priority: "low" | "medium" | "high";
+  assignee?: string;
+  startDate?: string;
+  endDate?: string;
+  progress?: number;
   createdAt: Date;
 }
 

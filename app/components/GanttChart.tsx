@@ -41,8 +41,8 @@ export default function GanttChart({ tasks, onTaskUpdate }: GanttChartProps) {
       id: task.id,
       title: task.title,
       description: task.description,
-      status: task.status as any,
-      priority: task.priority as any,
+      status: task.status,
+      priority: task.priority,
       startDate: task.dueDate, // Using dueDate as start for simplicity
       dueDate: task.dueDate,
       assignee: task.assignee,
@@ -123,14 +123,16 @@ export default function GanttChart({ tasks, onTaskUpdate }: GanttChartProps) {
 
   const handleTaskStatusChange = (taskId: string, newStatus: string) => {
     if (onTaskUpdate) {
-      onTaskUpdate(taskId, { status: newStatus as any });
+      onTaskUpdate(taskId, {
+        status: newStatus as "pending" | "in-progress" | "completed",
+      });
     }
     setGanttTasks((prev) =>
       prev.map((task) =>
         task.id === taskId
           ? {
               ...task,
-              status: newStatus as any,
+              status: newStatus as "pending" | "in-progress" | "completed",
               progress: newStatus === "completed" ? 100 : 0,
             }
           : task
@@ -263,7 +265,6 @@ export default function GanttChart({ tasks, onTaskUpdate }: GanttChartProps) {
                         day >= taskStartDate && day <= taskDueDate;
                       const isToday =
                         day.toDateString() === new Date().toDateString();
-                      const isPast = day < new Date() && !isToday;
 
                       return (
                         <div

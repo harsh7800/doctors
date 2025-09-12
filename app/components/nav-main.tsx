@@ -1,6 +1,7 @@
 "use client";
 
 import { IconCirclePlusFilled, IconMail, type Icon } from "@tabler/icons-react";
+import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ export function NavMain({
   items: {
     title: string;
     url: string;
-    icon?: Icon;
+    icon?: Icon | LucideIcon;
   }[];
 }) {
   return (

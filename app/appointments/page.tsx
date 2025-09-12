@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -32,6 +26,7 @@ import { Stethoscope, Plus, Search, Filter } from "lucide-react";
 import { LocalStorage } from "@/lib/storage";
 import { Consultation, Patient, Doctor } from "@/lib/types";
 import PrescriptionChips from "@/components/PrescriptionChips";
+import { PrescriptionChip } from "@/components/PrescriptionChips";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 export default function ConsultationsPage() {
@@ -52,7 +47,7 @@ export default function ConsultationsPage() {
     status: "scheduled" as "scheduled" | "completed" | "cancelled",
     symptoms: "",
     diagnosis: "",
-    prescriptions: [] as any[],
+    prescriptions: [] as PrescriptionChip[],
     notes: "",
   });
 
@@ -92,9 +87,10 @@ export default function ConsultationsPage() {
       status: formData.status,
       symptoms: formData.symptoms,
       diagnosis: formData.diagnosis,
-      prescription: formData.prescriptions,
+      prescriptions: formData.prescriptions,
       notes: formData.notes,
       type: "consultation",
+      createdAt: new Date(),
     };
 
     LocalStorage.addConsultation(newConsultation);
@@ -121,9 +117,7 @@ export default function ConsultationsPage() {
 
   const getPatientName = (patientId: string) => {
     const patient = patients.find((p) => p.id === patientId);
-    return patient
-      ? `${patient.firstName} ${patient.lastName}`
-      : "Unknown Patient";
+    return patient ? patient.name : "Unknown Patient";
   };
 
   const getDoctorName = (doctorId: string) => {
@@ -220,7 +214,7 @@ export default function ConsultationsPage() {
                       <SelectContent>
                         {patients.map((patient) => (
                           <SelectItem key={patient.id} value={patient.id}>
-                            {patient.firstName} {patient.lastName}
+                            {patient.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -423,7 +417,11 @@ export default function ConsultationsPage() {
           <div className="flex gap-2">
             <Select
               value={filterStatus}
-              onValueChange={(value: any) => setFilterStatus(value)}
+              onValueChange={(value: string) =>
+                setFilterStatus(
+                  value as "all" | "scheduled" | "completed" | "cancelled"
+                )
+              }
             >
               <SelectTrigger className="w-40">
                 <Filter className="h-4 w-4 mr-2" />
@@ -442,7 +440,9 @@ export default function ConsultationsPage() {
         {/* Today's Consultations */}
         {todayConsultations.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Today's Consultations</h2>
+            <h2 className="text-xl font-semibold">
+              Today&apos;s Consultations
+            </h2>
             <div className="grid gap-4">
               {todayConsultations.map((consultation) => (
                 <Card
@@ -581,14 +581,17 @@ export default function ConsultationsPage() {
                                 <strong>Prescriptions:</strong>
                                 <div className="flex flex-wrap gap-1 mt-1">
                                   {consultation.prescriptions.map(
-                                    (prescription: any, index: number) => (
+                                    (
+                                      prescription: PrescriptionChip,
+                                      index: number
+                                    ) => (
                                       <Badge
                                         key={index}
                                         variant="outline"
                                         className="text-xs"
                                       >
                                         {prescription.medicine?.name ||
-                                          prescription}
+                                          "Unknown Medicine"}
                                       </Badge>
                                     )
                                   )}

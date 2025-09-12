@@ -1,58 +1,70 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { LocalStorage } from '@/lib/storage';
-import { Patient } from '@/lib/types';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { ArrowLeft, UserPlus, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { LocalStorage } from "@/lib/storage";
+import { Patient } from "@/lib/types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import { ArrowLeft, UserPlus, AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function AddPatientPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [duplicatePatients, setDuplicatePatients] = useState<Patient[]>([]);
   const [showDuplicateWarning, setShowDuplicateWarning] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    gender: '',
-    dateOfBirth: '',
-    preferredLanguage: '',
-    city: '',
-    address: '',
-    pinCode: '',
+    name: "",
+    phone: "",
+    gender: "",
+    dateOfBirth: "",
+    preferredLanguage: "",
+    city: "",
+    address: "",
+    pinCode: "",
   });
 
   useEffect(() => {
     if (!user) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [user, router]);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Check for duplicates when name changes
-    if (field === 'name' && value.length > 2) {
+    if (field === "name" && value.length > 2) {
       const existingPatients = LocalStorage.getPatients();
-      const duplicates = existingPatients.filter(patient =>
+      const duplicates = existingPatients.filter((patient) =>
         patient.name.toLowerCase().includes(value.toLowerCase())
       );
       setDuplicatePatients(duplicates);
       setShowDuplicateWarning(duplicates.length > 0);
-    } else if (field === 'name' && value.length <= 2) {
+    } else if (field === "name" && value.length <= 2) {
       setDuplicatePatients([]);
       setShowDuplicateWarning(false);
     }
@@ -60,26 +72,32 @@ export default function AddPatientPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
       // Validate required fields
-      if (!formData.name || !formData.phone || !formData.gender || !formData.dateOfBirth) {
-        setError('Please fill in all required fields');
+      if (
+        !formData.name ||
+        !formData.phone ||
+        !formData.gender ||
+        !formData.dateOfBirth
+      ) {
+        setError("Please fill in all required fields");
         setIsLoading(false);
         return;
       }
 
       // Check for exact duplicate
       const existingPatients = LocalStorage.getPatients();
-      const exactDuplicate = existingPatients.find(patient =>
-        patient.name.toLowerCase() === formData.name.toLowerCase() &&
-        patient.phone === formData.phone
+      const exactDuplicate = existingPatients.find(
+        (patient) =>
+          patient.name.toLowerCase() === formData.name.toLowerCase() &&
+          patient.phone === formData.phone
       );
 
       if (exactDuplicate) {
-        setError('A patient with this name and phone number already exists');
+        setError("A patient with this name and phone number already exists");
         setIsLoading(false);
         return;
       }
@@ -89,9 +107,9 @@ export default function AddPatientPage() {
         id: Date.now().toString(),
         name: formData.name,
         phone: formData.phone,
-        gender: formData.gender as 'male' | 'female' | 'other',
+        gender: formData.gender as "male" | "female" | "other",
         dateOfBirth: formData.dateOfBirth,
-        preferredLanguage: formData.preferredLanguage || 'English',
+        preferredLanguage: formData.preferredLanguage || "English",
         city: formData.city,
         address: formData.address,
         pinCode: formData.pinCode,
@@ -100,12 +118,12 @@ export default function AddPatientPage() {
       };
 
       LocalStorage.addPatient(newPatient);
-      
+
       // Redirect to patient overview
       router.push(`/patients/${newPatient.id}`);
     } catch (err) {
-      setError('An error occurred while adding the patient');
-      console.error('Error adding patient:', err);
+      setError("An error occurred while adding the patient");
+      console.error("Error adding patient:", err);
     } finally {
       setIsLoading(false);
     }
@@ -130,8 +148,12 @@ export default function AddPatientPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Add New Patient</h1>
-            <p className="text-gray-600">Register a new patient in the system</p>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Add New Patient
+            </h1>
+            <p className="text-gray-600">
+              Register a new patient in the system
+            </p>
           </div>
         </div>
 
@@ -144,10 +166,15 @@ export default function AddPatientPage() {
                 <p>Similar patients found. Please review before proceeding:</p>
                 <div className="space-y-1">
                   {duplicatePatients.map((patient) => (
-                    <div key={patient.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <div
+                      key={patient.id}
+                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    >
                       <div>
                         <p className="font-medium">{patient.name}</p>
-                        <p className="text-sm text-gray-600">{patient.phone} • {patient.city}</p>
+                        <p className="text-sm text-gray-600">
+                          {patient.phone} • {patient.city}
+                        </p>
                       </div>
                       <Button
                         variant="outline"
@@ -173,7 +200,7 @@ export default function AddPatientPage() {
                   Patient Information
                 </CardTitle>
                 <CardDescription>
-                  Enter the patient's basic information
+                  Enter the patient&apos;s basic information
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -191,7 +218,9 @@ export default function AddPatientPage() {
                       <Input
                         id="name"
                         value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("name", e.target.value)
+                        }
                         placeholder="Enter patient's full name"
                         required
                       />
@@ -202,7 +231,9 @@ export default function AddPatientPage() {
                         id="phone"
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("phone", e.target.value)
+                        }
                         placeholder="Enter phone number"
                         required
                       />
@@ -212,7 +243,12 @@ export default function AddPatientPage() {
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="gender">Gender *</Label>
-                      <Select value={formData.gender} onValueChange={(value) => handleInputChange('gender', value)}>
+                      <Select
+                        value={formData.gender}
+                        onValueChange={(value) =>
+                          handleInputChange("gender", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select gender" />
                         </SelectTrigger>
@@ -229,7 +265,9 @@ export default function AddPatientPage() {
                         id="dateOfBirth"
                         type="date"
                         value={formData.dateOfBirth}
-                        onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("dateOfBirth", e.target.value)
+                        }
                         required
                       />
                     </div>
@@ -237,8 +275,15 @@ export default function AddPatientPage() {
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="preferredLanguage">Preferred Language</Label>
-                      <Select value={formData.preferredLanguage} onValueChange={(value) => handleInputChange('preferredLanguage', value)}>
+                      <Label htmlFor="preferredLanguage">
+                        Preferred Language
+                      </Label>
+                      <Select
+                        value={formData.preferredLanguage}
+                        onValueChange={(value) =>
+                          handleInputChange("preferredLanguage", value)
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select language" />
                         </SelectTrigger>
@@ -257,7 +302,9 @@ export default function AddPatientPage() {
                       <Input
                         id="city"
                         value={formData.city}
-                        onChange={(e) => handleInputChange('city', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("city", e.target.value)
+                        }
                         placeholder="Enter city"
                       />
                     </div>
@@ -268,7 +315,9 @@ export default function AddPatientPage() {
                     <Textarea
                       id="address"
                       value={formData.address}
-                      onChange={(e) => handleInputChange('address', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("address", e.target.value)
+                      }
                       placeholder="Enter full address"
                       rows={3}
                     />
@@ -279,14 +328,16 @@ export default function AddPatientPage() {
                     <Input
                       id="pinCode"
                       value={formData.pinCode}
-                      onChange={(e) => handleInputChange('pinCode', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("pinCode", e.target.value)
+                      }
                       placeholder="Enter pin code"
                     />
                   </div>
 
                   <div className="flex gap-4">
                     <Button type="submit" disabled={isLoading}>
-                      {isLoading ? 'Adding Patient...' : 'Add Patient'}
+                      {isLoading ? "Adding Patient..." : "Add Patient"}
                     </Button>
                     <Link href="/patients">
                       <Button variant="outline" type="button">
@@ -316,7 +367,10 @@ export default function AddPatientPage() {
                 </div>
                 <div className="text-sm text-gray-600">
                   <p className="font-medium">Duplicate Check:</p>
-                  <p className="mt-1">The system will check for similar names and alert you if duplicates are found.</p>
+                  <p className="mt-1">
+                    The system will check for similar names and alert you if
+                    duplicates are found.
+                  </p>
                 </div>
               </CardContent>
             </Card>

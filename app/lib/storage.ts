@@ -414,6 +414,8 @@ export class LocalStorage {
             "Check all scheduled appointments and review patient histories",
           dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
           completed: false,
+          status: "pending",
+          priority: "high",
           createdAt: new Date(),
         },
         {
@@ -424,6 +426,8 @@ export class LocalStorage {
             "Review and update medication dosages for chronic patients",
           dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // Day after tomorrow
           completed: false,
+          status: "pending",
+          priority: "medium",
           createdAt: new Date(),
         },
         {
@@ -434,6 +438,8 @@ export class LocalStorage {
             "Create slides for the upcoming medical conference presentation",
           dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Next week
           completed: true,
+          status: "completed",
+          priority: "low",
           createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
         },
         {
@@ -444,6 +450,8 @@ export class LocalStorage {
             "Call patients who were discharged this week to check on their recovery",
           dueDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday (overdue)
           completed: false,
+          status: "pending",
+          priority: "high",
           createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
         },
         {
@@ -454,6 +462,8 @@ export class LocalStorage {
             "Review and update standard operating procedures for the clinic",
           dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days from now
           completed: false,
+          status: "pending",
+          priority: "medium",
           createdAt: new Date(),
         },
       ];

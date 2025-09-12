@@ -49,7 +49,7 @@ export default function PatientsPage() {
     setFilteredPatients(filtered);
   }, [searchTerm, patients]);
 
-  const handlePatientAdded = (newPatient: Patient) => {
+  const handlePatientAdded = () => {
     // Refresh the patients list
     const allPatients = LocalStorage.getPatients();
     setPatients(allPatients);

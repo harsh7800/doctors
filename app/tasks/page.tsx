@@ -35,8 +35,6 @@ import {
   Filter,
   SortAsc,
   SortDesc,
-  Trash2,
-  Edit,
   AlertCircle,
   BarChart3,
   List,
@@ -121,6 +119,7 @@ export default function TasksPage() {
     if (newTask.title.trim() && newTask.dueDate) {
       const task: Task = {
         id: Date.now().toString(),
+        doctorId: user?.id || "1",
         title: newTask.title,
         description: newTask.description,
         dueDate: newTask.dueDate,
@@ -149,12 +148,6 @@ export default function TasksPage() {
     const updatedTasks = tasks.map((task) =>
       task.id === taskId ? { ...task, completed: !task.completed } : task
     );
-    setTasks(updatedTasks);
-    LocalStorage.setTasks(updatedTasks);
-  };
-
-  const handleDeleteTask = (taskId: string) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
     LocalStorage.setTasks(updatedTasks);
   };
@@ -340,7 +333,9 @@ export default function TasksPage() {
             <CardContent className="p-6">
               <Select
                 value={filterStatus}
-                onValueChange={(value: any) => setFilterStatus(value)}
+                onValueChange={(value: string) =>
+                  setFilterStatus(value as "all" | "pending" | "completed")
+                }
               >
                 <SelectTrigger>
                   <Filter className="h-4 w-4 mr-2" />
@@ -360,7 +355,9 @@ export default function TasksPage() {
               <div className="flex gap-2">
                 <Select
                   value={sortBy}
-                  onValueChange={(value: any) => setSortBy(value)}
+                  onValueChange={(value: string) =>
+                    setSortBy(value as "title" | "createdAt" | "dueDate")
+                  }
                 >
                   <SelectTrigger className="flex-1">
                     <SelectValue placeholder="Sort by" />
