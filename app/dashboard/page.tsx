@@ -10,7 +10,6 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardAction,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -271,7 +270,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {analytics.appointmentTrends.slice(-7).map((trend, index) => (
+              {analytics.appointmentTrends.slice(-7).map((trend) => (
                 <div
                   key={trend.date}
                   className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-all duration-200 group hover:shadow-md hover:scale-[1.01]"
