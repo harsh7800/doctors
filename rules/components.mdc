@@ -1,0 +1,9 @@
+---
+description: Rules for deciding where to place reusable components in a Next.js 14 project.
+globs: **/app/**/_components/**/*.*, **/app/**/global/**/*.*,**/components/global/**/*.*
+alwaysApply: true
+
+
+- Component placement rule: Only create a reusable component inside a global folder if it has potential to be used in multiple places. Otherwise, create it inside the `_components` folder of the specific route, or ask me before deciding the location.
+
+---

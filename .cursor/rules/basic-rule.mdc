@@ -1,0 +1,28 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+## Rule: Feature/Component Implementation Validation
+
+After implementing any feature or new component:
+
+1. **Run Playwright MCP checks**
+   - Navigate through the website using Playwright MCP to verify the new feature/component works as intended.
+   - Ensure tests include navigation, interaction, and UI validation.
+
+2. **Server Usage Validation**
+   - Always check if a server is already running on `localhost`.
+   - **Do not** start a new server using `yarn dev` if one is already active.
+
+3. **Package Manager Standardization**
+   - Always use `yarn` over `npm` for dependency installation, scripts, and project management.
+   - Commands such as `npm install` or `npm run` must be replaced with their `yarn` equivalents.
+
+4. **UI Component Creation Standard**
+   - Always use **Shadcn UI** to create any new UI component.
+   - Ensure new components follow Shadcn’s patterns, structure, and styling conventions.
+   - Avoid using plain HTML/CSS or other UI libraries unless explicitly required.
+
+---
