@@ -256,7 +256,7 @@ export default function PatientOverviewPage() {
                   New Appointment
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl max-h-[600px] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>
                     Schedule New Appointment/Consultation

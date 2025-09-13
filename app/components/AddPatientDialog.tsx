@@ -174,7 +174,7 @@ export default function AddPatientDialog({
           Add Patient
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl h-[calc(100vh-300px)] max-h-[750px] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" />
@@ -259,7 +259,7 @@ export default function AddPatientDialog({
                 value={formData.gender}
                 onValueChange={(value) => handleInputChange("gender", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
@@ -292,7 +292,7 @@ export default function AddPatientDialog({
                   handleInputChange("preferredLanguage", value)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select language" />
                 </SelectTrigger>
                 <SelectContent>

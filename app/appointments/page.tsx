@@ -191,7 +191,7 @@ export default function ConsultationsPage() {
                 New Consultation
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl h-[calc(100vh-100px)] max-h-[750px] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Schedule New Consultation</DialogTitle>
                 <DialogDescription>
@@ -208,7 +208,7 @@ export default function ConsultationsPage() {
                         setFormData({ ...formData, patientId: value })
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select patient" />
                       </SelectTrigger>
                       <SelectContent>
@@ -228,7 +228,7 @@ export default function ConsultationsPage() {
                         setFormData({ ...formData, doctorId: value })
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select doctor" />
                       </SelectTrigger>
                       <SelectContent>
